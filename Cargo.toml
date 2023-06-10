@@ -1,0 +1,9 @@
+[workspace]
+members = [
+    "namesrv",
+    "broker",
+    "client",
+    "common",
+    "remoting",
+    "store"
+]
