@@ -6,4 +6,11 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-tokio = { version = "1", features = ["full"] }
+tokio = { version = "1", features = ["full"] } # 异步网络库
+futures = "0.3" # 提供 Stream trait
+prost = "0.11" # 处理 protobuf 的库
+bytes = "1" # 高效处理网络 buffer 的库
+
+
+[build-dependencies]
+prost-build = "0.11" # 处理 protobuf 的库
