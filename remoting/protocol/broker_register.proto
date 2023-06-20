@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package protocol;
+package remoting_command;
 
 // Broker 注册请求
 message BrokerRegisterRequest {

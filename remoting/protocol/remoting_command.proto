@@ -1,8 +1,7 @@
 syntax = "proto3";
-
-package protocol;
-
 import "broker_register.proto";
+
+package remoting_command;
 
 // 在网络之间传输的命令
 message RemotingCommand {
@@ -13,7 +12,7 @@ message RemotingCommand {
   // code
   int32 code = 3;
   // remark
-  optional string remark = 4;
+  string remark = 4;
   // 命令
   oneof command {
     BrokerRegisterRequest broker_register_request = 5;
