@@ -4,6 +4,7 @@ use flate2::Compression;
 use flate2::read::GzDecoder;
 use flate2::write::GzEncoder;
 use prost::Message;
+use tokio::io::{AsyncRead, AsyncReadExt};
 use tracing::error;
 use crate::error::RemotingError;
 use crate::protocol::RemotingCommand;
@@ -96,6 +97,27 @@ fn decode_header(buf: &mut BytesMut) -> Result<(u8, usize), RemotingError> {
     // 读取长度标识
     let len = buf.get_u32() as usize;
     Ok((compressed, len))
+}
+
+pub async fn read_frame<S>(stream: &mut S, buf: &mut BytesMut) -> Result<(), RemotingError>
+where
+    S: AsyncRead + Send + Unpin
+{
+    let compressed = stream.read_u8().await?;
+    let len = stream.read_u32().await?;
+    // 分配内存，保证能够读取一个 frame
+    buf.reserve(FRAME_HEADER_LEN + (len as usize));
+    // 写入 Frame header
+    buf.put_u8(compressed);
+    buf.put_u32(len);
+    // 将 buf 向前推进 len 的长度，因为后面会初始化，所以没有关系
+    unsafe {
+        buf.advance_mut(len as _);
+    }
+    // 读取数据
+    stream.read_exact(&mut buf[FRAME_HEADER_LEN..]).await?;
+
+    Ok(())
 }
 
 #[cfg(test)]
