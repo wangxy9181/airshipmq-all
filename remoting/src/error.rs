@@ -1,3 +1,4 @@
+use std::io;
 use thiserror::Error;
 
 #[derive(Debug, Error)]
@@ -9,6 +10,9 @@ pub enum RemotingError {
     FrameEncodeError(#[from] prost::EncodeError),
     #[error("Frame decode error")]
     FrameDecodeError(#[from] prost::DecodeError),
+    #[error("Frame compress error")]
+    FrameCompressError(#[from] io::Error),
 
-
+    #[error("解析 Frame header 失败: {0}")]
+    FrameHeaderParseFail(String),
 }

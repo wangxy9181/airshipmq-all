@@ -14,6 +14,7 @@ bytes = "1" # 高效处理网络 buffer 的库
 tracing = "0.1" # 跟踪
 tracing-subscriber = "0.3"
 thiserror = "1"
+flate2 = "1" # gzip 压缩
 
 common = { path = "../common" }
 
