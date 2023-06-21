@@ -65,7 +65,7 @@ where
         Ok(())
     }
 
-    fn poll_flush(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
+    fn poll_flush(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
         let this = self.get_mut();
         let len = this.write_buf.len();
         while this.written != len {
@@ -81,7 +81,11 @@ where
         Poll::Ready(Ok(()))
     }
 
-    fn poll_close(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
-        todo!()
+    fn poll_close(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
+        // 确保消息发送完成
+        ready!(self.as_mut().poll_flush(cx)?);
+        // 关闭 stream
+        ready!(Pin::new(&mut self.stream).poll_shutdown(cx)?);
+        Poll::Ready(Ok(()))
     }
 }
