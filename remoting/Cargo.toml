@@ -16,6 +16,7 @@ tracing = "0.1" # 跟踪
 tracing-subscriber = "0.3"
 thiserror = "1"
 flate2 = "1" # gzip 压缩
+async-trait = "0.1" # 允许 trait 里有 async fn
 
 common = { path = "../common" }
 
