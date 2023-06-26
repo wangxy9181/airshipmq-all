@@ -4,6 +4,19 @@ pub use remoting_command::remoting_command::*;
 mod remoting_command;
 
 impl RemotingCommand {
+    /// 创建错误 command
+    pub fn new_error_command(remark: impl Into<String>) -> Self {
+        let version = common::version();
+        Self {
+            version,
+            command_type: CommandType::Response as i32,
+            code: 500,
+            remark: remark.into(),
+            ..Default::default()
+        }
+    }
+
+    /// 创建 broker 注册请求
     pub fn new_broker_register_request(broker_name: impl Into<String>,
                                        broker_addr: impl Into<String>,
                                        cluster_name: impl Into<String>,

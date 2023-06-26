@@ -8,6 +8,7 @@ edition = "2021"
 [dependencies]
 tokio = { version = "1", features = ["full"] } # 异步网络库
 tokio-util = { version = "0.7.7", features = ["compat"] } # tokio 和 futures 的兼容库
+tokio-stream = "0.1.14"
 futures = "0.3" # 提供 Stream trait
 prost = "0.11" # 处理 protobuf 的库
 prost-types = "0.11" # 处理 protobuf 的库

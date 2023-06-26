@@ -21,9 +21,23 @@ pub struct RemotingStream<S, In, Out> {
     _out: PhantomData<Out>,
 }
 
+impl<S, In, Out> RemotingStream<S, In, Out>
+{
+    pub fn new(stream: S) -> Self {
+        Self {
+            stream,
+            read_buf: BytesMut::new(),
+            write_buf: BytesMut::new(),
+            written: 0,
+            _in: PhantomData::default(),
+            _out: PhantomData::default(),
+        }
+    }
+}
+
 impl<S, In, Out>  Stream for RemotingStream<S, In, Out>
 where
-    S: AsyncRead + AsyncWrite + Unpin + Send,
+    S: AsyncRead + Unpin + Send,
     In: Send + Unpin,
     Out: Unpin + Send +FrameCoder
 {
