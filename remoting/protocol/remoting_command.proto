@@ -10,17 +10,23 @@ message RemotingCommand {
   // 类型
   CommandType command_type = 2;
   // code
-  int32 code = 3;
+  int32 response_code = 3;
   // remark
   string remark = 4;
   // 命令
   oneof command {
     BrokerRegisterRequest broker_register_request = 5;
-    BrokerRegisterResponse broker_register_response = 6;
   }
 }
 
 enum CommandType {
   Request = 0;
   Response = 1;
+}
+
+enum ResponseCode {
+  Success = 0;
+  SystemError = 1;
+  SystemBusy = 2;
+  RequestCommandNotSupport = 3;
 }

@@ -13,7 +13,3 @@ message BrokerRegisterRequest {
   bool enable_acting_master = 7;
 }
 
-message BrokerRegisterResponse {
-
-}
-

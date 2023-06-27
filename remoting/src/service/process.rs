@@ -2,7 +2,7 @@ use async_trait::async_trait;
 use crate::protocol::RemotingCommand;
 
 #[async_trait]
-pub trait RemotingProcess: Send {
+pub trait RemotingProcess: Send + Sync + 'static {
 
     type Error;
 

@@ -1,6 +1,6 @@
 use std::io;
 use thiserror::Error;
-use crate::protocol::RemotingCommand;
+use crate::protocol::{RemotingCommand, ResponseCode};
 
 #[derive(Debug, Error)]
 pub enum RemotingError {
@@ -16,16 +16,19 @@ pub enum RemotingError {
 
     #[error("解析 Frame header 失败: {0}")]
     FrameHeaderParseFail(String),
+    #[error("No command")]
+    NoCommandError,
 }
 
 impl From<RemotingError> for RemotingCommand {
     fn from(error: RemotingError) -> Self {
         match error {
-            RemotingError::FrameOversizeError => RemotingCommand::new_error_command("Frame oversize error"),
-            RemotingError::FrameEncodeError(_) => RemotingCommand::new_error_command("Frame encode error"),
-            RemotingError::FrameDecodeError(_) => RemotingCommand::new_error_command("Frame decode error"),
-            RemotingError::FrameCompressError(_) => RemotingCommand::new_error_command("Frame compress error"),
-            RemotingError::FrameHeaderParseFail(s) => RemotingCommand::new_error_command(format!("解析 Frame header 失败: {}", s)),
+            RemotingError::FrameOversizeError => RemotingCommand::new_error_command(ResponseCode::SystemBusy, "Frame oversize error"),
+            RemotingError::FrameEncodeError(_) => RemotingCommand::new_error_command(ResponseCode::SystemBusy, "Frame encode error"),
+            RemotingError::FrameDecodeError(_) => RemotingCommand::new_error_command(ResponseCode::SystemBusy, "Frame decode error"),
+            RemotingError::FrameCompressError(_) => RemotingCommand::new_error_command(ResponseCode::SystemBusy, "Frame compress error"),
+            RemotingError::FrameHeaderParseFail(s) => RemotingCommand::new_error_command(ResponseCode::SystemBusy, format!("解析 Frame header 失败: {}", s)),
+            RemotingError::NoCommandError => RemotingCommand::new_error_command(ResponseCode::RequestCommandNotSupport, "No command"),
         }
     }
 }

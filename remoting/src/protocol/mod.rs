@@ -5,16 +5,27 @@ mod remoting_command;
 
 impl RemotingCommand {
     /// 创建错误 command
-    pub fn new_error_command(remark: impl Into<String>) -> Self {
+    pub fn new_error_command(response_code: ResponseCode, remark: impl Into<String>) -> Self {
         let version = common::version();
         Self {
             version,
             command_type: CommandType::Response as i32,
-            code: 500,
+            response_code: response_code as i32,
             remark: remark.into(),
             ..Default::default()
         }
     }
+    /// 创建成功返回
+    pub fn new_success_response() -> Self {
+        let version = common::version();
+        Self {
+            version,
+            command_type: CommandType::Response as i32,
+            response_code: ResponseCode::Success as i32,
+            ..Default::default()
+        }
+    }
+
 
     /// 创建 broker 注册请求
     pub fn new_broker_register_request(broker_name: impl Into<String>,
@@ -39,9 +50,10 @@ impl RemotingCommand {
                     enable_acting_master
                 }
             )),
-            code: Default::default(),
+            response_code: Default::default(),
             remark: Default::default(),
 
         }
     }
+
 }
