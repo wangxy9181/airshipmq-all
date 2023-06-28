@@ -6,7 +6,7 @@ fn main() -> Result<()> {
     config.bytes(&["."]);
     config.out_dir("src/protocol")
         .compile_protos(&[
-            "protocol/broker_register.proto",
+            "protocol/broker.proto",
             "protocol/remoting_command.proto",
     ], &[
             "protocol",

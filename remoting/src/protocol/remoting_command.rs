@@ -21,20 +21,23 @@ pub struct BrokerRegisterRequest {
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RemotingCommand {
+    /// 命令ID
+    #[prost(uint64, tag = "1")]
+    pub id: u64,
     /// 版本
-    #[prost(int32, tag = "1")]
+    #[prost(int32, tag = "2")]
     pub version: i32,
     /// 类型
-    #[prost(enumeration = "CommandType", tag = "2")]
+    #[prost(enumeration = "CommandType", tag = "3")]
     pub command_type: i32,
     /// code
-    #[prost(int32, tag = "3")]
+    #[prost(int32, tag = "4")]
     pub response_code: i32,
     /// remark
-    #[prost(string, tag = "4")]
+    #[prost(string, tag = "5")]
     pub remark: ::prost::alloc::string::String,
     /// 命令
-    #[prost(oneof = "remoting_command::Command", tags = "5")]
+    #[prost(oneof = "remoting_command::Command", tags = "6")]
     pub command: ::core::option::Option<remoting_command::Command>,
 }
 /// Nested message and enum types in `RemotingCommand`.
@@ -43,7 +46,7 @@ pub mod remoting_command {
     #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Command {
-        #[prost(message, tag = "5")]
+        #[prost(message, tag = "6")]
         BrokerRegisterRequest(super::BrokerRegisterRequest),
     }
 }

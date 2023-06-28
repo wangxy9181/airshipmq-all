@@ -1,21 +1,23 @@
 syntax = "proto3";
-import "broker_register.proto";
+import "broker.proto";
 
 package remoting_command;
 
 // 在网络之间传输的命令
 message RemotingCommand {
+  // 命令ID
+  uint64 id = 1;
   // 版本
-  int32 version = 1;
+  int32 version = 2;
   // 类型
-  CommandType command_type = 2;
+  CommandType command_type = 3;
   // code
-  int32 response_code = 3;
+  int32 response_code = 4;
   // remark
-  string remark = 4;
+  string remark = 5;
   // 命令
   oneof command {
-    BrokerRegisterRequest broker_register_request = 5;
+    BrokerRegisterRequest broker_register_request = 6;
   }
 }
 

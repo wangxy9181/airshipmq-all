@@ -6,3 +6,12 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+anyhow = "1"
+tokio = { version = "1", features = ["full"] } # 异步网络库
+futures = "0.3" # 提供 Stream trait
+tracing = "0.1" # 跟踪
+tracing-subscriber = "0.3"
+async-trait = "0.1" # 允许 trait 里有 async fn
+
+remoting = { path = "../remoting" }
+common = { path = "../common" }
