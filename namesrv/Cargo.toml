@@ -12,6 +12,7 @@ futures = "0.3" # 提供 Stream trait
 tracing = "0.1" # 跟踪
 tracing-subscriber = "0.3"
 async-trait = "0.1" # 允许 trait 里有 async fn
+chrono = "0.4" # 时间处理
 
 remoting = { path = "../remoting" }
 common = { path = "../common" }
