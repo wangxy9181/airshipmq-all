@@ -2,10 +2,18 @@ syntax = "proto3";
 
 package remoting_command;
 
+import "response_code.proto";
+
 // Broker 注册请求
 message BrokerRegisterRequest {
   string broker_name = 1;
   string broker_addr = 2;
   int64 broker_id = 3;
+}
+
+// Broker 注册返回
+message BrokerRegisterResponse {
+   ResponseCode response_code = 1;
+   string message = 2;
 }
 

@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package remoting_command;
+
+enum ResponseCode {
+  Success = 0;
+  SystemError = 1;
+  SystemBusy = 2;
+  RequestCommandNotSupport = 3;
+}
