@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+package abi;
+
+// 在网络之间传输的命令
+message RemotingCommand {
+  // 命令ID
+  uint64 id = 1;
+  // 版本
+  int32 version = 2;
+  // 类型
+  CommandType command_type = 3;
+  // code
+  CommandCode command_code = 4;
+  // remark
+  string remark = 5;
+  // 数据
+  oneof data {
+    BrokerRegisterRequest broker_register_request = 6;
+  }
+}
+
+enum CommandType {
+  Request = 0;
+  Response = 1;
+}
+
+enum CommandCode {
+  Success = 0;
+  SystemError = 1;
+  SystemBusy = 2;
+  RequestCommandNotSupport = 3;
+}
+
+// Broker 注册请求
+message BrokerRegisterRequest {
+  string broker_name = 1;
+  string broker_addr = 2;
+  int64 broker_id = 3;
+}

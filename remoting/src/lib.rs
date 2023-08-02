@@ -1,2 +1,3 @@
-mod protocol;
+mod pb;
+mod network;
 mod error;
