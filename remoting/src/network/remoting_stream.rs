@@ -11,6 +11,7 @@ pub struct RemotingStream<Message, Stream> {
     stream: Stream,
     write_buf: BytesMut,
     read_buf: BytesMut,
+    written: usize,
     _message: PhantomData<Message>,
 }
 
@@ -24,6 +25,7 @@ where
             stream,
             write_buf: BytesMut::new(),
             read_buf: BytesMut::new(),
+            written: 0usize,
             _message: PhantomData::default(),
         }
     }
@@ -46,14 +48,14 @@ where
 
     fn poll_flush(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
         let this = self.get_mut();
-        let mut written = 0usize;
         let len = this.write_buf.len();
-        while written < len {
-            let size = ready!(Pin::new(&mut this.stream).poll_write(cx, &this.write_buf[written..]))?;
-            written += size;
+        while this.written < len {
+            let n = ready!(Pin::new(&mut this.stream).poll_write(cx, &this.write_buf[this.written..]))?;
+            this.written += n;
         }
         // 清除 buf
         this.write_buf.clear();
+        this.written = 0;
 
         Poll::Ready(Ok(()))
     }
