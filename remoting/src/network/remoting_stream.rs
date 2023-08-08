@@ -3,9 +3,9 @@ use std::pin::Pin;
 use std::task::{Context, Poll};
 use bytes::{BufMut, BytesMut};
 use futures::{ready, Sink, Stream, FutureExt};
-use tokio::io::{AsyncRead, AsyncReadExt, AsyncWrite, AsyncWriteExt};
+use tokio::io::{AsyncRead, AsyncWrite, AsyncWriteExt};
 use crate::error::RemotingError;
-use crate::network::frame::{FRAME_HEADER_LEN, FrameCoder};
+use crate::network::frame::{FrameCoder, read_frame};
 
 pub struct RemotingStream<Message, Stream> {
     stream: Stream,
@@ -88,26 +88,6 @@ where
         // 清除数据
         Poll::Ready(Some(Ok(Message::decode_frame(&mut this.read_buf)?)))
     }
-}
-
-pub async fn read_frame<S>(stream: &mut S, buf: &mut BytesMut) -> Result<(), RemotingError>
-where
-    S: AsyncRead + Unpin,
-{
-    let b = stream.read_u8().await?;
-    // 读取长度
-    let len = stream.read_u32().await?;
-    buf.reserve(len as usize + FRAME_HEADER_LEN);
-
-    buf.put_u8(b);
-    buf.put_u32(len);
-
-    unsafe {
-        buf.advance_mut(len as _);
-    }
-    // 读取指定长度的数据
-    stream.read_exact(&mut buf[FRAME_HEADER_LEN..]).await?;
-    Ok(())
 }
 
 #[cfg(test)]

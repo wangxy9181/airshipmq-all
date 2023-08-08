@@ -1,5 +1,6 @@
 use bytes::{Buf, BufMut, BytesMut};
 use prost::Message;
+use tokio::io::{AsyncRead, AsyncReadExt};
 use crate::error::RemotingError;
 use crate::pb::RemotingCommand;
 
@@ -41,6 +42,26 @@ where
 }
 
 impl FrameCoder for RemotingCommand {}
+
+pub async fn read_frame<S>(stream: &mut S, buf: &mut BytesMut) -> Result<(), RemotingError>
+where
+    S: AsyncRead + Unpin,
+{
+    let b = stream.read_u8().await?;
+    // 读取长度
+    let len = stream.read_u32().await?;
+    buf.reserve(len as usize + FRAME_HEADER_LEN);
+
+    buf.put_u8(b);
+    buf.put_u32(len);
+
+    unsafe {
+        buf.advance_mut(len as _);
+    }
+    // 读取指定长度的数据
+    stream.read_exact(&mut buf[FRAME_HEADER_LEN..]).await?;
+    Ok(())
+}
 
 #[cfg(test)]
 mod tests {
